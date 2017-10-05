@@ -1,5 +1,4 @@
 ;; Exercise 1.11 -- 
-
 ; f(n) = {n, if n < 3
 ;         f(n - 1) + 2f(n - 2) + 3f(n - 3), if n ≥ 3
 
@@ -28,5 +27,8 @@
 
 
 ;; Exercise 1.12 -- Pascal's triangle
-
-
+;; Computes elements of the triangle given row and column
+(define (pascal r c)
+  (if (or (= c 1) (= c r))
+    1
+    (+ (pascal (- r 1) (- c 1)) (pascal (- r 1) c))))
