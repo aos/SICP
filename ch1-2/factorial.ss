@@ -12,6 +12,5 @@
     (if (> counter n)
       product
       (iter (* counter product) 
-            (+ ccounter 1))))
-  (iter 1 1 n))
-
+            (+ counter 1))))
+  (iter 1 1))
