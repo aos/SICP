@@ -18,3 +18,23 @@
 ; (Case 1 descent:)
 ; 5 - 5 = 0 (a == 0, count += 1)
 ; 5 - 1 -> x5 (a == 0, count += 1)
+
+; Top-level definition
+(define (count-change amount)
+  (cc amount 5))
+; Recursive method
+(define (cc amount kinds-of-coins)
+  (cond ((= amount 0) 1)
+        ((or (< amount 0) (= kinds-of-coins 0)) 0)
+        (else (+ (cc amount
+                     (- kinds-of-coins 1))
+                 (cc (- amount
+                        (first-denomination kinds-of-coins))
+                     kinds-of-coins)))))
+; Grabs the first denomination and works its way down the list
+(define (first-denomination kinds-of-coins)
+  (cond ((= kinds-of-coins 1) 1)
+        ((= kinds-of-coins 2) 5)
+        ((= kinds-of-coins 3) 10)
+        ((= kinds-of-coins 4) 25)
+        ((= kinds-of-coins 5) 50)))
