@@ -9,18 +9,18 @@
 
 ; Linear iterative
 (define (expt b n)
-  (define (helper counter total)
-    (if (= counter n)
-      total
-      (helper (+ counter 1)
-              (* total b))))
-  (helper 0 1))
+  (define (expt-iter counter product)
+    (if (= counter 0)
+      product
+      (expt-iter (- counter 1)
+                 (* b product))))
+  (expt-iter n 1))
 
 ; Using successive squaring
-(define (fast-expt b n)
+(define (fast-exp b n)
   (define (square x) (* x x))
-  (define (even? n) (= (remainder n 2) 0))
-
+  (define (even? n)
+    (= (remainder n 2) 0))
   (cond ((= n 0) 1)
-        ((even? n) (square (fast-expt b (/ n 2))))
-        (else (* b (fast-expt b (- n 1))))))
+        ((even? n) (square (fast-exp b (/ n 2))))
+        (else (* b (fast-exp b (- n 1))))))
