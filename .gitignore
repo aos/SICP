@@ -1,0 +1,9 @@
+# Extras for the book
+*.gif
+*.jpg
+*.html
+*.css
+*.db
+
+# For completion
+scheme_completion.txt
