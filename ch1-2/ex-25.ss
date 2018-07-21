@@ -1,13 +1,15 @@
-; Exercise 1.23
+; Exercise 1.25
+; Using the fast-expt procedure in place
+(define (fast-exp b n)
+  (define (square x) (* x x))
+  (define (even? n)
+    (= (remainder n 2) 0))
+  (cond ((= n 0) 1)
+        ((even? n) (square (fast-exp b (/ n 2))))
+        (else (* b (fast-exp b (- n 1))))))
 
 (define (expmod base exp m)
-  (cond ((= exp 0) 1)
-        ((even? exp)
-         (remainder (square (expmod base (/ exp 2) m))
-                    m))
-        (else
-          (remainder (* base (expmod base (- exp 1) m))
-                     m))))
+  (remainder (fast-exp base exp) m))
 
 (define (fermat-test n)
   (define (try-it a)
