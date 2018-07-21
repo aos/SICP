@@ -13,28 +13,27 @@
 (define (prime? n)
   (= n (smallest-divisor n)))
 
-; Fermat's Little Theorem
-; If 'n' is a prime number and 'a' is any positive integer less than 'n', then
-; 'a' raised to the 'n'-th power is congruent to 'a' modulo 'n'.
-; Eg: (a^n) / n = x remainder a
-;     (a^n) ≡ a mod n
+; Exercise 1.21
+; 199 => 199
+; 1999 => 1999
+; 19999 => 7
 
-; We can also test for primality using Fermat's theorem. Given a number 'n',
-; pick a random number 'a < n', and compute the remainder of 'a^n' modulo 'n'.
-; If the result is not equal to 'a', then 'n' is certainly not a prime. If it is
-; 'a', then chances are good that 'n' is a prime. Now repeat with another random
-; number 'a' and test it with the same method. If it also satisfies the
-; equation, we can be more confident that 'n' is a prime. This algorithm is
-; known as the Fermat test.
+; Exercise 1.22
+(define (timed-prime-test n)
+  (newline)
+  (display n)
+  (start-prime-test n (runtime)))
+(define (start-prime-test n start-time)
+  (if (prime? n)
+      (report-prime (- (runtime) start-time))))
+(define (report-prime elapsed-time)
+  (display " *** ")
+  (display elapsed-time))
 
-; To implement the Fermat test, we need a procedure that computes the
-; exponential of a number modulo another number.
-
-(define (expmod base exp m)
-  (cond ((= exp 0) 1)
-        ((even? exp)
-         (remainder (square (expmod base (/ exp 2) m))
-                    m))
-        (else
-          (remainder (* base (expmod base (- exp 1) m))
-                     m))))
+; Write a procedure "search-for-primes" that checks the primality of consecutive
+; odd integers in a specified range
+(define (search-for-primes start end)
+  (timed-prime-test start)
+  (cond ((>= start end) (display "COMPUTATION COMPLETE"))
+        ((even? start) (search-for-primes (+ start 1) end))
+        (else (search-for-primes (+ start 2) end))))
