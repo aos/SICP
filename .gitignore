@@ -5,5 +5,7 @@
 *.css
 *.db
 
+book-2/
+
 # For completion
 scheme_completion.txt
