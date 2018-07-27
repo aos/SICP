@@ -5,9 +5,8 @@
 ;                     'f(x), f(f(x)), f(f(f(x))), ...'
 ; until the value doesn't change very much.
 
-(define tolerance 0.00001)
-
 (define (fixed-point f first-guess)
+  (define tolerance 0.00001)
   (define (close-enough? v1 v2)
     (< (abs (- v1 v2))
        tolerance))
