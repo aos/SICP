@@ -17,16 +17,16 @@
         (try next))))
   (try first-guess))
 
-;; Using this method to approximate the fixed point of the cosine function:
+; Using this method to approximate the fixed point of the cosine function:
 (fixed-point cos 1.0)
 
-;; Finding a solution to the equation 'y = sin y + cos y':
+; Finding a solution to the equation 'y = sin y + cos y':
 (fixed-point (lambda (y) (+ (sin y) (cos y)))
              1.0)
 
-;; Computing the square root of some number 'x' requires finding a 'y' such that
-;; 'y² = x'. Putting this equation into the equivalent form 'y = x/y', we
-;; recognize that we are looking for a fixed point function 'y → x/y':
+; Computing the square root of some number 'x' requires finding a 'y' such that
+; 'y² = x'. Putting this equation into the equivalent form 'y = x/y', we
+; recognize that we are looking for a fixed point function 'y → x/y':
 
 (define (sqrt x)
   (fixed-point (lambda (y) (/ x y))

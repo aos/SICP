@@ -19,10 +19,10 @@
 ; Without average damping
 (fixed-point
   (lambda (x) (/ (log 1000) (log x)))
-  2)
+   2)
 
 ; With average damping
 (define (average x y) (/ (+ x y) 2))
 (fixed-point
   (lambda (x) (average x (/ (log 1000) (log x))))
-  2)
+   2)
