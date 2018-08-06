@@ -23,8 +23,8 @@
 
 ; Converting to real numbers
 (((lambda (f)
-  (lambda (x)
-    (f ((lambda (x) x) x)))) (lambda (x) (+ x 1))) 0)
+    (lambda (x)
+      (f ((lambda (x) x) x)))) (lambda (x) (+ x 1))) 0)
 
 ; Expansion of (add-1 one)
 (add-1 one)
@@ -55,9 +55,18 @@
     (lambda (x)
       (f ((lambda (x) (f (f x))) x)))) (lambda (x) (+ x 1))) 0)
 
+; Repeated application of 'add-1'
+(((add-1 (add-1 (add-1 two))) (lambda (x) (+ x 1))) 0) ; 5
+
+(define (add-1 n)
+  (lambda (f)
+    (lambda (x) (f ((n f) x)))))
+
 ; Direct definition of the addition procedure
 (define (add m n)
   (lambda (f)
-    (lambda (x) (m ((n f) x)))))
+    (lambda (x) ((m f) ((n f) x)))))
 
-(((add zero two) (lambda (x) (+ x 1))) 0)
+(((add two two) (lambda (x) (+ x 1))) 0) ; 4
+(((add two zero) (lambda (x) (+ x 1))) 0) ; 2
+(((add one two) (lambda (x) (+ x 1))) 0) ; 3
