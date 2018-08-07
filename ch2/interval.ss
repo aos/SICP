@@ -5,8 +5,8 @@
   (cons lower-bound upper-bound))
 
 ; Exercise 2.7
-(define (lower-bound interval) (car interval))
-(define (upper-bound interval) (cdr interval))
+(define (lower-bound interval) (min (car interval) (cdr interval)))
+(define (upper-bound interval) (max (car interval) (cdr interval)))
 
 ; Adding intervals
 (define (add-interval x y)
@@ -18,10 +18,10 @@
 ; Exercise 2.8
 ; Subtracting intervals
 (define (sub-interval x y)
-  (make-interval (abs (- (lower-bound x)
-                         (lower-bound y)))
-                 (abs (- (upper-bound x)
-                         (upper-bound y)))))
+  (make-interval (- (lower-bound x)
+                    (lower-bound y))
+                 (- (upper-bound x)
+                    (upper-bound y))))
 
 ; Multiplying intervals
 ; Find the min and max of the products of the bounds and using them as bounds of
