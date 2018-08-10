@@ -30,3 +30,11 @@
 (define (percent i)
   (/ (width i)
      (center i)))
+
+(define (percent-two i)
+  (/ (- (upper-bound i)
+        (lower-bound i))
+     (+ (upper-bound i)
+        (lower-bound i))))
+
+(define test-give-tolerance (make-center-percent 3 .1))

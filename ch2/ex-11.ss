@@ -1,4 +1,4 @@
-; Exercise 2.11
+; Exercise 2.11 -- REVISIT
 ; By testing the signs of the endpoints of the intervals, it is possible to
 ; break 'mul-interval' into nine cases
 ; Only ONE of which requires more than two multiplications
