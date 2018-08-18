@@ -58,11 +58,31 @@
                                 (make-branch 1 5)))
                  (make-branch 8 9))) 
 
-(total-weight clrs)
-(total-weight simple)
+(total-weight clrs) ; 20 + 13 + 4 + 15 + 10 = 62
+(total-weight simple) ; 4 + 5 + 9 = 18
+
+; A balanced mobile
+(define b-mob (make-mobile
+                (make-branch 2
+                             (make-mobile
+                               (make-branch 3 6)
+                               (make-branch 9 2)))
+                (make-branch 4 4)))
+
+(define simple-balanced (make-mobile
+                          (make-branch 3 6)
+                          (make-branch 9 2)))
 
 ; Exercise 3
 ; Balanced mobiles
 ; Torque = length x weight
 ; If left torque == right torque, then we're balanced
-(define (balanced? mobile))
+(define (balanced? mobile)
+  (define (torque branch)
+    (* (car branch)
+       (car (cdr branch))))
+  (cond ((not (pair? (branch-structure mobile)))
+         (branch-structure mobile))
+        (else
+          (= (torque (left-branch mobile))
+             (torque (right-branch mobile))))))
