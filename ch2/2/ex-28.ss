@@ -21,3 +21,11 @@
             (append (iter (car t) curr)
                     (iter (cdr t) curr)))))
   (iter tree '()))
+
+; Non-iterative
+(define (fringe tree)
+  (cond ((null? tree) '())
+        ((not (pair? tree)) (list tree))
+        (else
+          (append (fringe (car tree))
+                  (fringe (cdr tree))))))
