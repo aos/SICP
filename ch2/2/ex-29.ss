@@ -10,33 +10,27 @@
 ; Exercise 1
 ; Define selectors
 (define (left-branch mobile)
-  (newline)
-  (display "mobile (left-branch): ")(display (car mobile))
   (car mobile))
 
 (define (right-branch mobile)
-  (newline)
-  (display "mobile (right-branch): ")(display (car (cdr mobile)))
   (car (cdr mobile)))
 
 (define (branch-length branch)
-  (newline)
-  (display "branch length: ")(display branch)
   (car branch))
 
 (define (branch-structure branch)
-  (newline)
-  (display "branch structure: ")(display (car (cdr branch)))
   (car (cdr branch)))
+
+(define (is-branch? structure)
+  (not (pair? (car structure))))
 
 ; Exercise 2
 ; Get total weight of mobile
 (define (total-weight mobile)
-  (cond ((not (pair? mobile)) 0) 
-        ((not (pair? (branch-structure mobile)))
-         (branch-structure mobile))
-        (else (+ (total-weight (left-branch mobile))
-                 (total-weight (right-branch mobile))))))
+  (cond ((null? mobile) 0) 
+        ((not (pair? mobile)) mobile)
+        (else (+ (total-weight (branch-structure (left-branch mobile)))
+                 (total-weight (branch-structure (right-branch mobile)))))))
 
 ; Make some test mobiles
 (define clrs (make-mobile
@@ -73,16 +67,36 @@
                           (make-branch 3 6)
                           (make-branch 9 2)))
 
+(define complex-balanced (make-mobile
+                           (make-branch 5
+                                        (make-mobile
+                                          (make-branch 3 14)
+                                          (make-branch 2
+                                                       (make-mobile
+                                                         (make-branch 3
+                                                                      (make-mobile
+                                                                        (make-branch 5 4)
+                                                                        (make-branch 2 10)))
+                                                         (make-branch 6 7)))))
+                           (make-branch 25 7)))
+
+(define simple-unbalanced (make-mobile
+                            (make-branch 2
+                                         (make-mobile
+                                           (make-branch 2 6)
+                                           (make-branch 9 2)))
+                            (make-branch 4 4)))
+
 ; Exercise 3
 ; Balanced mobiles
 ; Torque = length x weight
 ; If left torque == right torque, then we're balanced
 (define (balanced? mobile)
   (define (torque branch)
-    (* (car branch)
-       (car (cdr branch))))
-  (cond ((not (pair? (branch-structure mobile)))
-         (branch-structure mobile))
-        (else
-          (= (torque (left-branch mobile))
-             (torque (right-branch mobile))))))
+    (* (branch-length branch)
+       (total-weight (branch-structure branch))))
+  (if (not (pair? mobile))
+      true
+      (and (= (torque (left-branch mobile)) (torque (right-branch mobile)))
+           (balanced? (branch-structure (left-branch mobile)))
+           (balanced? (branch-structure (right-branch mobile))))))
