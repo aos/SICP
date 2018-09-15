@@ -1,6 +1,6 @@
 ; Exercise 2.57
 ; Extend differentiation to handle sums and products of arbitrary numbers of
-; variables
+; terms
 
 (define (deriv expr var)
   (cond ((number? expr) 0)
@@ -27,3 +27,22 @@
   (and (variable? v1)
        (variable? v2)
        (eq? v1 v2)))
+(define (make-sum a1 a2) (list '+ a1 a2))
+(define (make-product m1 m2) (list '* m1 m2))
+
+(define (sum? x)
+  (and (pair? x) (eq? (car x) '+)))
+(define (addend s) (cadr s))
+(define (augend s) (caddr s))
+(define (augend s)
+  (let ((rest (cddr s)))
+    (if (null? (cdr rest))
+        (car rest)
+        (make-sum
+          (car rest)
+          (augend )))))
+
+(define (product? x)
+  (and (pair? x) (eq? (car x) '*)))
+(define (multiplier p) (cadr p))
+(define (multiplicand p) (caddr p))
