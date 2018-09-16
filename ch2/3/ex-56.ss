@@ -23,10 +23,14 @@
          (make-product
            (make-product
              (exponent expr)
-             (make-exponentiation (base expr) (- (exponent expr) 1)))
+             (make-exponentiation
+               (base expr)
+               (if (number? (exponent expr))
+                   (- (exponent expr) 1)
+                   '((- exponent expr) 1))))
            (deriv (base expr) var)))
         (else (error "unknown expression
-                     type: DERIV" expr))))
+                     type: DERIV" expr)))
 
 (define (variable? x) (symbol? x))
 (define (same-variable? v1 v2)
@@ -71,6 +75,8 @@
 (define (exponent n) (caddr n))
 
 (define (make-exponentiation b e)
-  (cond ((=number? e 0) 1)
+  (cond ((=number? b 1) 1)
         ((=number? e 1) b)
-        (else (list '** b e))))
+        ((=number? e 0) 1)
+        (else
+          (list '** b e))))
