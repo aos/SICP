@@ -61,4 +61,30 @@
 ; Parenthesis -> multiplication -> addition
 ; (x + 3 * (x + y + 2)) 
 ; Define predicates, selectors, and constructors
-(define (addend s) ())
+(define (augend s)
+  (define (rest expr)
+    (cond ((null? (cdr expr)) (car expr))
+          ((pair? (caddr expr)) (rest (caddr expr)))
+          ((product? expr)
+           (make-product
+             (car expr)
+             (caddr expr)))
+          ((sum? expr)
+           (make-sum
+             (car expr)
+             (caddr expr))))) 
+  (rest (cddr s)))
+
+(define (multiplicand p)
+  (define (rest expr)
+    (cond ((null? (cdr expr)) (car expr))
+          ((pair? (caddr expr)) (rest (caddr expr)))
+          ((product? expr)
+           (make-product
+             (car expr)
+             (caddr expr)))
+          ((sum? expr)
+           (make-sum
+             (car expr)
+             (caddr expr)))))
+  (rest (cddr p)))
