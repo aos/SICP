@@ -21,7 +21,7 @@
              (multiplicand expr))))
         (else (error "unknown expression
                      type: DERIV" expr))))
-(define (variable? x) (symbol? x))
+(define variable? symbol?)
 (define (same-variable? v1 v2)
   (and (variable? v1)
        (variable? v2)
@@ -61,30 +61,35 @@
 ; Parenthesis -> multiplication -> addition
 ; (x + 3 * (x + y + 2)) 
 ; Define predicates, selectors, and constructors
-(define (augend s)
-  (define (rest expr)
-    (cond ((null? (cdr expr)) (car expr))
-          ((pair? (caddr expr)) (rest (caddr expr)))
-          ((product? expr)
-           (make-product
-             (car expr)
-             (caddr expr)))
-          ((sum? expr)
-           (make-sum
-             (car expr)
-             (caddr expr))))) 
-  (rest (cddr s)))
+(define (sum? expr)
+  (and (pair? expr)
+       (memq '+ expr)))
+(define (product? expr)
+  (and (pair? expr)
+       (memq '* expr)))
 
-(define (multiplicand p)
-  (define (rest expr)
-    (cond ((null? (cdr expr)) (car expr))
-          ((pair? (caddr expr)) (rest (caddr expr)))
-          ((product? expr)
-           (make-product
-             (car expr)
-             (caddr expr)))
-          ((sum? expr)
-           (make-sum
-             (car expr)
-             (caddr expr)))))
-  (rest (cddr p)))
+(define (simple-sum? x)
+  (null? (cdddr x)))
+
+(define (augend s) (caddr s))
+(define (multiplicand p) (caddr p))
+
+; All expressions can be reduced to one of:
+; 1. Sum expression:
+; a.  (p +  q)        addend = p        augend = q
+; b.  (p +  q +  r)   addend = p        augend = q + r
+; c.  (p +  q *  r)   addend = p        augend = q * r
+; d.  (p *  q +  r)   addend = p * q    augend = r
+; e.  (p +  q ** r)   addend = p        augend = q ** r
+; f.  (p ** q +  r)   addend = p ** q   augend = r
+
+; a,b,c,e :   p + ...       => addend is always p
+; for d:
+;   algebraically: p * q + r = r + p * q = r + q * p
+;   symbolically: let E = p * q + r = reverse E = r + q * p
+; => The addend is the reversed augend of a reversed expression type c
+; for f:
+;   algebraically: p ** q + r = r + p ** q = r + (p ** p)
+;   symbolically: let E = p ** q + r = reverse E = r + q ** p
+; => The addend is the reversed augend of a reversed expression type e
+(define (addend s))
