@@ -66,6 +66,7 @@
        (memq '+ expr)))
 (define (product? expr)
   (and (pair? expr)
+       (not (sum? expr))
        (memq '* expr)))
 
 (define (simple-sum? x)
@@ -89,7 +90,67 @@
 ;   symbolically: let E = p * q + r = reverse E = r + q * p
 ; => The addend is the reversed augend of a reversed expression type c
 ; for f:
-;   algebraically: p ** q + r = r + p ** q = r + (p ** p)
+;   algebraically: p ** q + r = r + p ** q
 ;   symbolically: let E = p ** q + r = reverse E = r + q ** p
 ; => The addend is the reversed augend of a reversed expression type e
-(define (addend s))
+(define (addend s)
+  (cond
+    ; type a
+    ((simple-sum? s) (car s))
+    ; type b, c, e
+    ((eq? '+ (cadr s)) (car s))
+    ; type d, f
+    (else (simplify-term (reverse (augend (reverse s)))))))
+
+; a,b,c,e :   p + ...       => augend is the expression after the +
+; for d:
+;   algebraically: p * q + r = r + p * q = r + q * p
+;   symbolically: let E = p * q + r = reverse E = r + q * p
+; => the augend is the addend of a reversed expression type c
+; for f:
+;   algebraically: p ** q + r = r + p ** q = r + (p ** p)
+;   symbolically: let E = p ** q + r = reverse E = r + q ** p
+; => the augend is the addend of a reversed expression type e
+(define (augend s)
+  (cond
+    ((simple-sum? s) (caddr x))
+    ; a,b,c,e
+    ((eq? '+ (cadr s)) (cddr s))
+    ; d,f
+    (else (addend (reverse s)))))
+
+; Complex expression terms are allowed and can contain variables, constant, or
+; sub-expressions which be a list of a single term
+(define (simplify-term x)
+  (cond ((variable? x) x)
+        ((null? (cdr x)) (car x))
+        (else x))) 
+
+(define (simple-product? p)
+  (null? (cdddr p)))
+
+; 2. Product expressions
+; a.  (p *  q)        multiplier = p        multiplicand = q
+; b.  (p *  q *  r)   multiplier = p        multiplicand = q * r
+; c.  (p *  q ** r)   multiplier = p        multiplicand = q ** r
+; d.  (p ** q *  r)   multiplier = p ** q   multiplicand = r
+
+; a,b,c : p * ... => multiplier always p
+; for d :
+;   algebraically: p ** q * r = r * p ** q
+;   symbolically: let E = p ** q * r = reverse E = r * q ** p
+; => the multiplier is the reversed multiplicand of a reversed expression type c
+(define (multiplier p)
+  (cond ((simple-product? p) (car p))
+        ((eq? '* (cadr p)) (car p)) ; a,b,c
+        (else (reverse (multiplicand (reverse p))))))
+
+; a,b,c : p * ... => multiplicand is the expression after the *
+; for d :
+;   algebraically: p ** q * r = r * p ** q
+;   symbolically: let E = p ** q * r = reverse E = r * q ** p
+; => the multiplicand is the multiplier of the reversed expression type c
+(define (multiplicand p)
+  (cond ((simple-product? p) (caddr p))
+        ((eq? '* (cadr p)) (cddr p))
+        (else (multiplier (reverse p)))))
