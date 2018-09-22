@@ -13,3 +13,19 @@
          (cons (car set2)
                (union-set set1 (cdr set2))))
         (else (union-set set1 (cdr set2)))))
+
+; Using append and filter
+(define (union-set set1 set2)
+  (append set1
+          (filter
+            (lambda (x) (not (element-of-set? x set1)))
+            set2)))
+
+; Using 'adjoin-set'
+(define (adjoin-set x set)
+  (if (element-of-set? x set)
+    set
+    (cons x set)))
+
+(define (union set1 set2)
+  (fold-right adjoin-set set2 set1))
