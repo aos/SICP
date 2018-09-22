@@ -17,7 +17,11 @@
 ; This is also fast as we are just appending one set to another!
 (define (union-set set1 set2)
   (fold-right adjoin-set set2 set1))
+; Alternatively
+(define (union-set set1 set2)
+  (append set1 set2))
 
+; No extra work needs to be done here
 (define (intersection-set set1 set2)
   (cond ((or (null? set1) (null? set2))
          '())
