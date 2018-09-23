@@ -7,20 +7,6 @@
 (define (make-tree entry left right)
   (list entry left right))
 
-(define (adjoin-set x set)
-  (cond ((null? set) (make-tree x '() '()))
-        ((= x (entry set)) set)
-        ((< x (entry set))
-         (make-tree
-           (entry set)
-           (adjoin-set x (left-branch set))
-           (right-branch set)))
-        ((> x (entry set))
-         (make-tree
-           (entry set)
-           (left-branch set)
-           (adjoin-set x (right-branch set))))))
-
 (define t1 (make-tree
              7
              (make-tree
@@ -54,6 +40,34 @@
                (make-tree 7 '() '())
                (make-tree 11 '() '()))))
 
+(define t4 (make-tree
+             1
+             '()
+             (make-tree
+               2
+               '()
+               (make-tree
+                 3
+                 '()
+                 (make-tree
+                   4
+                   '()
+                   (make-tree 5 '() '()))))))
+
+(define t5 (make-tree
+             5
+             (make-tree
+               4
+               (make-tree
+                 3
+                 (make-tree
+                   2
+                   (make-tree 1 '() '())
+                   '())
+                 '())
+               '())
+             '()))
+
 ; Recursive - converts a binary tree to a list
 (define (tree->list-1 tree)
   (if (null? tree)
@@ -69,11 +83,20 @@
 (define (tree->list-2 tree)
   (define (copy-to-list tree result-list)
     (if (null? tree)
-      result-list
-      (copy-to-list
-        (left-branch tree)
-        (cons (entry tree)
-              (copy-to-list
-                (right-branch tree)
-                result-list)))))
+        result-list
+        (copy-to-list
+          (left-branch tree)
+          (cons (entry tree)
+                (copy-to-list
+                  (right-branch tree)
+                  result-list)))))
   (copy-to-list tree '()))
+
+; 1. They produce the same result for every tree. For all trees, they produce
+; the list: (1 3 5 7 9 11)
+; 2. The second procedure grows more slowly because it does not use 'append'.
+; With 'append', we essentially have to iterate through every part of the left
+; branch. Because 'append' runs in linear time, we add an extra O(n) to our
+; first procedure, causing the time complexity to jump to O(n * log n), where as
+; the second procedure runs in O(n) since we have to run through all the nodes
+; to create the list.
