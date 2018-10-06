@@ -40,9 +40,14 @@
 ; Parameters: list of symbols, tree
 ; Returns the list of bits that encodes a given symbol according to a given tree
 (define (encode-symbol sym tree)
-  (define (enc-1 sym tree bits)
-    (cond ((and (leaf? tree)
-                (eq? sym (symbol-leaf tree)))
-           bits)
-          ((memq sym (symbols tree)))))
-  (enc-1 sym tree '())
+  (cond ((leaf? tree) '())
+        ((memq sym (symbols (left-branch tree)))
+         (cons 0
+               (encode-symbol sym
+                              (left-branch tree))))
+        ((memq sym (symbols (right-branch tree)))
+         (cons 1
+               (encode-symbol sym
+                              (right-branch tree))))
+        (else (error "symbol not in tree:
+                     ENCODE-SYMBOL" sym))))
