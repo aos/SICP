@@ -49,9 +49,32 @@
   (successive-merge
     (make-leaf-set pairs)))
 
+; A pair set looks like:
+; ((leaf d 1) (leaf c 1) (leaf b 2) (leaf a 4))
+
 ; The procedure that we need to make
+; Note: since the left or right branch are arbitrary, this will use the right
+; branch as the normal 'leaf' branch
+; It will pick off the first and second leaves to create our initial 'mini' tree
+; and then fold the rest into it
 (define (successive-merge leaves-set)
-  ((make-code-tree
-     (car leaves-set)
-     (make-code-tree
-       (cdr leaves-set)))))
+  (let ((len (length leaves-set)))
+    (cond ((= len 0) (error
+                       "SUCCESSIVE-MERGE:
+                       zero pairs were provided"))
+          ((= len 1) (car leaves-set))
+          (else
+            (fold-left make-code-tree
+                       (make-code-tree (car leaves-set)
+                                       (cadr leaves-set))
+                       (cddr leaves-set))))))
+
+; Alternative solution
+(define (successive-merge leaves-set)
+  (if (= (length leaves-set) 1)
+      (car leaves-set)
+      (let ((first (car leaves-set))
+            (second (cadr leaves-set))
+            (rest (cddr leaves-set)))
+      (successive-merge (adjoin-set (make-code-tree first second)
+                                    rest)))))

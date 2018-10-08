@@ -25,7 +25,7 @@
 ; Starts with the initial and applies it to the first element (left) first
 ; Argument positions for lambda (accumulator current)
 (fold-left / 1 (list 1 2 3 4))
-(- (- (- (- 0 1) 2) 3) 4)
+(/ (/ (/ (/ 1 1) 2) 3) 4)
 
 ; Define 'reverse'
 (define (reverse sequence)
