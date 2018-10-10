@@ -46,8 +46,9 @@
   (successive-merge
     (make-leaf-set pairs)))
 
-; A pair set looks like:
-; ((leaf d 1) (leaf c 1) (leaf b 2) (leaf a 4))
+; Incorrect first attempt at successive-merge
+; This only successively adds the nodes to the tree but does not take into
+; account when joined nodes can have a sum weight less than larger nodes
 (define (successive-merge leaves-set)
   (let ((len (length leaves-set)))
     (cond ((= len 0) (error
@@ -59,7 +60,11 @@
                        (make-code-tree (car leaves-set)
                                        (cadr leaves-set))
                        (cddr leaves-set))))))
+
 ; Alternative successive-merge
+; Note: this is the correct implementation of successive-merge
+; We use 'adjoin-set' to correctly place the joined nodes into the set based on
+; their weight
 (define (successive-merge leaves-set)
   (if (= (length leaves-set) 1)
       (car leaves-set)
