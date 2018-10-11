@@ -32,7 +32,10 @@
   (define (iter start first L)
     (cond ((= (length L) 0) start) 
           ((= (remainder first 2) (remainder (car L) 2))
-           (iter (append start (list (car L))) first (cdr L)))
+           (iter
+             (append start (list (car L)))
+             first
+             (cdr L)))
           (else (iter start first (cdr L)))))
   (iter '() x z))
 
