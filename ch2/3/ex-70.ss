@@ -106,4 +106,3 @@
 ; There are 8 words -- so... 2^3 = 8, need to use 3 bit fixed-length codes
 ; There are 36 words * 3 bits each = 90 + 18 = 108 bits
 ; A saving of around 22% !
-; 
