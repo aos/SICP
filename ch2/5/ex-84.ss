@@ -32,15 +32,14 @@
 ; Type heirarchy (tower)
 (define type-tower '(integer rational real complex))
 
-; Test which is higher in tower
-(define (find-highest-type args)
-  (let ((type1-tier (memq t1 type-tower))
-        (type2-tier (memq t2 type-tower)))
-    ))
-
 ; 'raise'
 (define (raise num)
   (let ((supertypes (memq (type-tag obj) type-tower)))
     (if (and supertypes (>= (length supertypes) 2))
         ((get-coercion (type-tag obj) (cadr supertypes)) obj)
         #f)))
+
+; 1. create wrapper around 'raise' to successively raise a number based on its
+; heirarchy and target heirarchy
+; 2. this would involve knowing the target heirarchy from a list of arguments
+; (aka the common one among all of them)
