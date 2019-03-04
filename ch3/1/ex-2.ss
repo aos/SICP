@@ -10,13 +10,12 @@
   (let ((calls 0))
     (define (reset-count)
       (begin (set! calls 0) calls))
-    (define (dispatch m)
+    (lambda (m)
       (cond ((eq? m 'how-many-calls?) calls)
             ((eq? m 'reset-count) (reset-count))
             (else
               (begin (set! calls (+ calls 1))
-                     (f m)))))
-    dispatch))
+                     (f m)))))))
 
 (define s (make-monitored sqrt))
 (s 100) ; 10
