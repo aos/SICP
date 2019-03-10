@@ -13,11 +13,15 @@
 
 (define (make-four l)
   (let ((tmp (cons l l)))
-    (set-cdr! tmp (cdr l))
-    tmp))
+    (list tmp)))
 (count-pairs (make-four x)) ; 4
 
 (define (make-seven l)
   (let ((tmp (cons l l)))
     (cons tmp tmp)))
 (count-pairs (make-seven '(a))) ; 7
+
+; Infinite
+(define cycle (list 'a 'b))
+(set-cdr! (cdr cycle) cycle)
+(count-pairs cycle) 
