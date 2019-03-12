@@ -1,0 +1,70 @@
+; Exercise 3.23
+; Build a 'deque' (double-ended queue) using pairs
+
+(define (make-deque)
+  (let ((front-ptr '())
+        (rear-ptr '()))
+    ; Internal definitions
+    (define (front-insert-deque! item)
+      (let ((new-pair (list item '() '())))
+        (cond ((null? front-ptr)
+               (set! front-ptr new-pair)
+               (set! rear-ptr new-pair))
+              (else
+                (set-cdr! (cdr new-pair) front-ptr)
+                (set-car! (cdr front-ptr) new-pair)
+                (set! front-ptr new-pair)))
+        front-ptr))
+    (define (rear-insert-deque! item)
+      (let ((new-pair (list item '() '())))
+        (cond ((null? front-ptr)
+               (set! front-ptr new-pair)
+               (set! rear-ptr new-pair))
+              (else
+                (set-car! (cdr new-pair) rear-ptr)
+                (set-cdr! (cdr rear-ptr) new-pair)
+                (set! rear-ptr new-pair)))
+        front-ptr))
+    (define (front-delete-deque!)
+      (cond ((null? front-ptr)
+             (error "FRONT-DELETE called with an
+                    empty deque" front-ptr))
+            (else
+              (set! front-ptr (cddr front-ptr))
+              (set-car! (cdr front-ptr) (list '()))
+              front-ptr)))
+    (define (rear-delete-deque!)
+      (cond ((null? front-ptr)
+             (error "REAR-DELETE called with
+                    an empty deque" front-ptr))
+            (else
+              (set! rear-ptr (cadr rear-ptr))
+              (set-cdr! (cdr rear-ptr) (list '()))
+              front-ptr)))
+    (define (print)
+      (define (iter x result)
+        (if (null? (cdr x))
+            (append result (car x))
+            (iter (cddr x) (append result (cons (car x) '())))))
+      (iter front-ptr '()))
+    ; Dispatcher
+    (define (dispatch m)
+      (cond ((eq? m 'front) front-ptr)
+            ((eq? m 'rear) rear-ptr)
+            ((eq? m 'empty?) (null? front-ptr))
+            ((eq? m 'front-insert) front-insert-deque!)
+            ((eq? m 'front-delete) front-delete-deque!)
+            ((eq? m 'rear-insert) rear-insert-deque!)
+            ((eq? m 'rear-delete) rear-delete-deque!)
+            ((eq? m 'print) (print))
+            (else
+              (error "Unsupported operation" m))))
+    dispatch))
+
+(define dq (make-deque))
+((dq 'rear-insert) 'a)
+((dq 'front-insert) 'b)
+((dq 'front-insert) 'c)
+((dq 'rear-delete))
+((dq 'front-delete))
+(display (dq 'print))
