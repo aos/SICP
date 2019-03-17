@@ -25,3 +25,8 @@
                                 (cdr b-list)
                                 (cdr s-list)
                                 c-out)))))
+
+; What is the delay needed for complete output?
+; One full-adder has a delay of:
+; 3x AND/OR gate + 2x inverter + 2 AND gate
+; Total = number of full-adders * full-adder-delay
