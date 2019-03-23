@@ -22,8 +22,8 @@
 
 (define (display-stream s)
   (stream-for-each (lambda (x)
-                     ((newline)
-                      (display x)))
+                     (newline)
+                     (display x))
                    s))
 
 ; cons, car and cdr
