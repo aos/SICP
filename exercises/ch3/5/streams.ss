@@ -26,6 +26,13 @@
                      (display x))
                    s))
 
+(define (partial-stream->list count stream)
+  (if (<= count 0)
+      '()
+      (cons (stream-car stream)
+            (first (- count 1)
+                   (stream-cdr stream)))))
+
 ; cons, car and cdr
 (define (cons-stream a b)
   (cons a (delay b)))
