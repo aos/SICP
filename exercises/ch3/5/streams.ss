@@ -30,8 +30,8 @@
   (if (<= count 0)
       '()
       (cons (stream-car stream)
-            (first (- count 1)
-                   (stream-cdr stream)))))
+            (partial-stream->list (- count 1)
+                                  (stream-cdr stream)))))
 
 ; cons, car and cdr
 (define (cons-stream a b)

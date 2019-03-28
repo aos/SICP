@@ -32,5 +32,4 @@
 (define primes (sieve (integers-starting-from 2)))
 
 ; add-streams
-(define (add-streams s1 s2)
-  (stream-map + s1 s2))
+(define (add-streams s1 s2) (stream-map + s1 s2))
