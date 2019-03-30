@@ -1,12 +1,13 @@
 ; Exercise 3.77
 
-(define (integral integrand initial-value dt)
+(define (integral delayed-integrand initial-value dt)
   (cons-stream
     initial-value
-    (if (stream-null? integrand)
+    (let ((integrand (force delayed-integrand)))
+      (if (stream-null? integrand)
         the-empty-stream
         (integral
-          (stream-cdr integrand)
+          (delay (stream-cdr integrand))
           (+ (* dt (stream-car integrand))
              initial-value)
-          dt)))))
+          dt))))))
