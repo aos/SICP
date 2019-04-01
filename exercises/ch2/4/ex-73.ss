@@ -33,18 +33,6 @@
 ; 2. Procedure for derivates of sums and products, and aux code required to
 ; install them in the table
 (define (install-deriv-package)
-  (put 'deriv '+
-       (lambda (exp var)
-  (put 'deriv '*
-       (lambda (exp var)
-         (make-sum
-           (make-product ((get 'operand-one '*) exp)
-                         (deriv ((get 'operand-two '*) exp) var))
-           (make-product (deriv ((get 'operand-one '*) exp) var)
-                         ((get 'operand-one '*) exp)))))
-  'done)
-
-(define (install-deriv-package)
   ;; internal procedures
   (define (addend s) (car s))
   (define (augend s) (cadr s))
