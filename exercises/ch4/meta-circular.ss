@@ -55,7 +55,7 @@
 
 ;;
 (define (list-of-values exps env)
-  (if (no-operands? exp)
+  (if (no-operands? exps)
       '()
       (cons (eval (first-operand exps) env)
             (list-of-values
