@@ -1,57 +1,39 @@
 ; Exercise 4.12
-; Abstract away the common parts of
+; Abstract away the common parts of:
 ; define-variable!, set-variable-value!, lookup-variable-value
 
-(define (env-loop env scan-proc)
-  (if (eq? env the-empty-environment)
-      (error "Unbound variable" var)
-      (let ((frame (first-frame env)))
-        (scan-proc (frame-variables frame)
-                    (frame-values frame)))))
-
-(define (lookup-variable-value var env)
-  (define (env-loop env)
-    (define (scan vars vals)
-      (cond ((null? vars)
-             (env-loop
-               (enclosing-environment env)))
-            ((eq? var (car vars))
-             (car vals))
-            (else (scan (cdr vars)
-                        (cdr vals)))))
-    (if (eq? env the-empty-environment)
-        (error "Unbound variable" var)
-        (let ((frame (first-frame env)))
-          (scan (frame-variables frame)
-                (frame-values frame)))))
-  (env-loop env))
-
-(define (set-variable-value! var val env)
-  (define (env-loop env)
-    (define (scan vars vals)
-      (cond ((null? vars)
-             (env-loop
-               (enclosing-environment env)))
-            ((eq? var (car vars))
-             (set-car! vals val))
-            (else (scan (cdr vars)
-                        (car vars)))))
-    (if (eq? env the-empty-environment)
-        (error "Unbound variable: SET!" var)
-        (let ((frame (first-frame env)))
-          (scan (frame-variables frame)
-                (frame-values frame)))))
-  (env-loop env))
-
-(define (define-variable! var val env)
+(define (env-loop var val env action)
+  (define (scan vars vals)
+    (cond ((and (eq? env the-empty-environment)
+                (or (eq? action 'lookup-var)
+                    (eq? action 'set-var!)))
+           (error "Undefined variable" var))
+          ((null? vars)
+           (if (or (eq? action 'lookup-var)
+                   (eq? action 'set-var!))
+               (env-loop
+                 var
+                 val
+                 (enclosing-environment env)
+                 action)
+               (add-binding-to-frame!
+                 var val (first-frame env))))
+          ((eq? var (car vars))
+           (if (or (eq? action 'define-var)
+                   (eq? action 'set-var!))
+               (set-car! vals val)
+               (car vals)))
+          (else (scan (cdr vars)
+                      (cdr vals)))))
   (let ((frame (first-frame env)))
-    (define (scan vars vals)
-      (cond ((null? vars)
-             (add-binding-to-frame!
-               var val frame))
-            ((eq? var (car vars))
-             (set-car! vals val))
-            (else (scan (cdr vars)
-                        (cdr vals)))))
     (scan (frame-variables frame)
           (frame-values frame))))
+
+(define (lookup-variable-value var env)
+  (env-loop var '() env 'lookup-var))
+
+(define (set-variable-value! var val env)
+  (env-loop var val env 'set-var!))
+
+(define (define-variable! var val env)
+  (env-loop var val env 'define-var))
