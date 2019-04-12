@@ -13,11 +13,11 @@
   (tagged-list? p 'procedure))
 (define (procedure-parameters p) (cadr p))
 (define (procedure-body p) (caddr p))
-(define (procedure-environment) (cadddr p))
+(define (procedure-environment p) (cadddr p))
 
 ;; Environment operations
 (define (enclosing-environment env) (cdr env))
-(define (first-frame (car env)))
+(define (first-frame env) (car env))
 (define the-empty-environment '())
 
 ;; Frames
