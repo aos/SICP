@@ -6,9 +6,6 @@
   (define u (<e1>))
   (define v (<e2>))
   <e3>)
-'((define u (<e1>))
- (define v (<e2>))
- '(<e3>))
 
 ; Into this:
 (lambda (<vars>)
