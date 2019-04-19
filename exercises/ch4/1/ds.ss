@@ -68,7 +68,7 @@
             ((eq? var (car vars))
              (set-car! vals val))
             (else (scan (cdr vars)
-                        (car vars)))))
+                        (cdr vals)))))
     (if (eq? env the-empty-environment)
         (error "Unbound variable: SET!" var)
         (let ((frame (first-frame env)))
