@@ -43,11 +43,9 @@
          (eval-sequence
            (procedure-body procedure)
            (extend-environment
-             (procedure-parameters
-               procedure)
+             (procedure-parameters procedure)
              arguments
-             (procedure-environment
-               procedure))))
+             (procedure-environment procedure))))
         (else
           (error "Unknown procedure
                  type: APPLY"
