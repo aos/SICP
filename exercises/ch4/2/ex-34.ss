@@ -1,0 +1,75 @@
+; Exercise 4.34
+; Pretty print lazy lists
+
+(define (setup-environment)
+  (let ((initial-env
+          (extend-environment (primitive-procedure-names)
+                              (primitive-procedure-objects)
+                              the-empty-environment)))
+    (define-variable! 'true #t initial-env)
+    (define-variable! 'false #f initial-env)
+    (eval
+      '(begin
+         (define (cons cons-first cons-rest)
+           (lambda (m) (m cons-first cons-rest)))
+         (define (car z)
+           (z (lambda (p q) p)))
+         (define (cdr z)
+           (z (lambda (p q) q)))
+         (define (null? c)
+           (eq? c '())))
+      initial-env)
+    initial-env))
+
+(define (lookup-variable-value* var env)
+  (define (env-loop env)
+    (define (scan vars vals)
+      (cond ((null? vars)
+             (env-loop
+               (enclosing-environment env)))
+            ((eq? var (car vars))
+             (car vals))
+            (else (scan (cdr vars)
+                        (cdr vals)))))
+    (if (eq? env the-empty-environment)
+        '()
+        (let ((frame (first-frame env)))
+          (scan (frame-variables frame)
+                (frame-values frame)))))
+  (env-loop env))
+
+(define (lazy-cons? procedure)
+  (let ((env (procedure-environment procedure)))
+    (and (not (null? (lookup-variable-value* 'cons-first env)))
+         (not (null? (lookup-variable-value* 'cons-rest env))))))
+
+(define (lazy-cons-print object)
+  (define (iter object n)
+    (if (not (null? object))
+        (let* ((env (procedure-environment object))
+               (first (lookup-variable-value* 'cons-first env))
+               (rest (lookup-variable-value* 'cons-rest env)))
+          (if (> n 10)
+              (display "...")
+              (begin
+                (let ((first-forced (force-it first)))
+                  (if (and (compound-procedure? first-forced)
+                           (lazy-cons? first-forced))
+                      (lazy-cons-print first-forced)
+                      (display first-forced)))
+                (display " ")
+                (iter (force-it rest) (+ n 1)))))))
+  (display "(")
+  (iter object 0)
+  (display ")"))
+
+(define (user-print object)
+  (if (compound-procedure? object)
+      (if (lazy-cons? object)
+          (lazy-cons-print object)
+          (display
+            (list 'compound-procedure
+                  (procedure-parameters object)
+                  (procedure-body object)
+                  '<procedure-env>)))
+      (display object)))
