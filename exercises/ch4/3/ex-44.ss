@@ -1,4 +1,4 @@
-; Exercise 2.42 - xxx (REVISIT)
+; Exercise 4.44 -- xxx REVISIT
 ; Eight queens puzzle
 
 ; Library functions
@@ -35,8 +35,6 @@
                          result)))
                 true
                 rest)))
-
-(define (safe? column positions) #t)
 
 ; Define 'adjoin-position'
 ; Adjoins a new row-column position to a set of positions
