@@ -18,7 +18,8 @@
         (let-inits exp)))
 
 ; Example
-(let ((x 3) (y (+ 3 4)))
+(let ((x 3)
+      (y (+ 3 4)))
   (* x y))
 
 ; Turns into it...
