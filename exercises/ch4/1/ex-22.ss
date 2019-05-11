@@ -2,4 +2,5 @@
 ; Extend the analysis-executor evaluator to handle 'let'
 
 ; ...
-((let? exp) (analyze (let->combination exp)))
+((let? exp)
+ (analyze (let->combination exp)))

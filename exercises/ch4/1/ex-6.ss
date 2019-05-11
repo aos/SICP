@@ -17,10 +17,10 @@
           (let-body exp))
         (let-inits exp)))
 
-; Example
-(let ((x 3)
-      (y (+ 3 4)))
-  (* x y))
-
-; Turns into it...
-((lambda (x y) (* x y)) 3 (+ 3 4))
+;; Example
+; (let ((x 3)
+;       (y (+ 3 4)))
+;   (* x y))
+; 
+;; Turns into it...
+; ((lambda (x y) (* x y)) 3 (+ 3 4))
