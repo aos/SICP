@@ -3,6 +3,37 @@
 (define (amb? exp) (tagged-list? exp 'amb))
 (define (amb-choices exp) (cdr exp))
 
+(define (analyze exp)
+  (cond ((amb? exp)
+         (analyze-amb exp))
+        ((self-evaluating? exp)
+         (analyze-self-evaluating exp))
+        ((variable? exp)
+         (analyze-variable exp))
+        ((quoted? exp)
+         (analyze-quoted exp))
+        ((assignment? exp)
+         (analyze-assignment exp))
+        ((definition? exp)
+         (analyze-definition exp))
+        ((let? exp)
+         (analyze (let->combination exp)))
+        ((if? exp)
+         (analyze-if exp))
+        ((lambda? exp)
+         (analyze-lambda exp))
+        ((begin? exp)
+         (analyze-sequence
+           (begin-actions exp)))
+        ((cond? exp)
+         (analyze (cond->if exp)))
+        ((application? exp)
+         (analyze-application exp))
+        (else
+          (error "Unknown expression
+                 type: ANALYZE"
+                 exp))))
+
 (define (ambeval exp env succeed fail)
   ((analyze exp) env succeed fail))
 
@@ -43,7 +74,7 @@
                    (aproc env succeed fail2)))
              ;; failure continuation for evaluating
              ;; the predicate
-             fail)))
+             fail))))
 
 (define (analyze-sequence exps)
   (define (sequentially a b)
@@ -115,3 +146,58 @@
                      proc args succeed fail3))
                  fail2))
              fail))))
+
+(define (get-args aprocs env succeed fail)
+  (if (null? aprocs)
+      (succeed '() fail)
+      ((car aprocs)
+       env
+       ;; success continuation for this aproc
+       (lambda (arg fail2)
+         (bkpt 'get-args)
+         (get-args
+           (cdr aprocs)
+           env
+           ;; success continuation for recursive
+           ;; call to get-args
+           (lambda (args fail3)
+             (bkpt 'success-in-recursion)
+             (succeed (cons arg args)
+                      fail3))
+           fail2))
+       fail)))
+
+(define (execute-application
+          proc args succeed fail)
+  (cond ((primitive-procedure? proc)
+         (bkpt 'execute-application)
+         (succeed
+           (apply-primitive-procedure
+             proc args)
+           fail))
+        ((compound-procedure? proc)
+         ((procedure-body proc)
+          (extend-environment
+            (procedure-parameters proc)
+            args
+            (procedure-environment proc))
+          succeed
+          fail))
+        (else (error "Unknown procedure type:
+                      EXECUTE-APPLICATION"
+                      proc))))
+
+(define (analyze-amb exp)
+  (let ((cprocs
+          (map analyze (amb-choices exp))))
+    (lambda (env succeed fail)
+      (bkpt 'analyze-amb)
+      (define (try-next choices)
+        (if (null? choices)
+            (fail)
+            ((car choices)
+             env
+             succeed
+             (lambda ()
+               (try-next (cdr choices))))))
+      (try-next cprocs))))
