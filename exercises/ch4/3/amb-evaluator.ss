@@ -14,10 +14,14 @@
          (analyze-quoted exp))
         ((assignment? exp)
          (analyze-assignment exp))
+        ((permanent-set? exp)
+         (analyze-permanent-set exp))
         ((definition? exp)
          (analyze-definition exp))
         ((let? exp)
          (analyze (let->combination exp)))
+        ((if-fail? exp)
+         (analyze-if-fail exp))
         ((if? exp)
          (analyze-if exp))
         ((lambda? exp)
@@ -154,14 +158,12 @@
        env
        ;; success continuation for this aproc
        (lambda (arg fail2)
-         (bkpt 'get-args)
          (get-args
            (cdr aprocs)
            env
            ;; success continuation for recursive
            ;; call to get-args
            (lambda (args fail3)
-             (bkpt 'success-in-recursion)
              (succeed (cons arg args)
                       fail3))
            fail2))
@@ -170,7 +172,6 @@
 (define (execute-application
           proc args succeed fail)
   (cond ((primitive-procedure? proc)
-         (bkpt 'execute-application)
          (succeed
            (apply-primitive-procedure
              proc args)
@@ -191,7 +192,6 @@
   (let ((cprocs
           (map analyze (amb-choices exp))))
     (lambda (env succeed fail)
-      (bkpt 'analyze-amb)
       (define (try-next choices)
         (if (null? choices)
             (fail)
