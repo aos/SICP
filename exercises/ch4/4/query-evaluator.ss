@@ -6,8 +6,7 @@
         (qproc (contents query) frame-stream)
         (simple-query query frame-stream))))
 
-(define (simple-query query-pattern
-                      frame-stream)
+(define (simple-query query-pattern frame-stream)
   (stream-flatmap
     (lambda (frame)
       ; stream 1 and 2 combined
