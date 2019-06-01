@@ -16,4 +16,4 @@
   (and (not (stream-null? s))
        (stream-null? (stream-cdr s))))
 
-(put 'unique 'qeval uniquely-asserted)
+; (put 'unique 'qeval uniquely-asserted)

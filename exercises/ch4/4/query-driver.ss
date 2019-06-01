@@ -60,7 +60,7 @@
                  (first-conjunct conjuncts)
                  frame-stream))))
 
-(put 'and 'qeval conjoin)
+; (put 'and 'qeval conjoin)
 
 ; or
 (define (disjoin disjuncts frame-stream)
@@ -73,7 +73,7 @@
                  (rest-disjuncts disjuncts)
                  frame-stream)))))
 
-(put 'or 'qeval disjoin)
+; (put 'or 'qeval disjoin)
 
 ; not
 (define (negate operands frame-stream)
@@ -86,7 +86,7 @@
           the-empty-stream))
     frame-stream))
 
-(put 'not 'qeval negate)
+; (put 'not 'qeval negate)
 
 ; lisp-value
 (define (lisp-value call frame-stream)
@@ -102,7 +102,7 @@
           the-empty-stream))
     frame-stream))
 
-(put 'lisp-value 'qeval lisp-value)
+; (put 'lisp-value 'qeval lisp-value)
 
 (define (execute exp)
   (apply (eval (predicate exp)
@@ -112,4 +112,4 @@
 (define (always-true ignore frame-stream)
   frame-stream)
 
-(put 'always-true 'qeval always-true)
+; (put 'always-true 'qeval always-true)
