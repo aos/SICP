@@ -119,6 +119,7 @@
                        (append the-ops ops))))
               ((eq? message 'stack) stack)
               ((eq? message 'operations) the-ops)
+              ((eq? message 'inst-sequence-look) the-instruction-sequence)
               (else (error "Unknown request: MACHINE"
                            message))))
       dispatch)))

@@ -67,6 +67,8 @@
                   operations)))
           (lambda ()
             (set-contents!
+              ; runs the test condition
+              ; flag is assigned the result (either true or false)
               flag (condition-proc))
             (advance-pc pc)))
         (error "Bad TEST instruction: ASSEMBLE"
@@ -90,6 +92,9 @@
                 (advance-pc pc))))
         (error "Bad BRANCH instruction: ASSEMBLE"
                inst))))
+
+(define (branch-dest branch-instruction)
+  (cadr branch-instruction))
 
 ;; Goto
 (define (make-goto inst machine labels pc)
@@ -204,7 +209,7 @@
 (define (operation-exp? exp)
   (and (pair? exp)
        (tagged-list? (car exp) 'op)))
-(define (operation-exp-operands operation-exp)
+(define (operation-exp-op operation-exp)
   (cadr (car operation-exp)))
 (define (operation-exp-operands operation-exp)
   (cdr operation-exp))

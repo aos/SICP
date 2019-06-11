@@ -26,7 +26,6 @@
     (fold-right (lambda (pos result)
                   (let ((row (car pos))
                         (col (cadr pos)))
-                    (bkpt 'safe-bkpt)
                     (and (not (= (- trial-row trial-col)
                                  (- row col)))
                          (not (= (+ trial-row trial-col)
@@ -51,7 +50,6 @@
         (lambda (positions) (safe? k positions))
         (flatmap
           (lambda (rest-of-queens)
-            (bkpt 'rest-of-queens-bkpt)
             ; 2. Generate a new set of positions by placing a queen in each
             ; row of the 'kth' column
             (map (lambda (new-row)
