@@ -41,9 +41,7 @@
                                       (stack 'initialize))
                                     (map cadr stack-table))))))
           ; .. create a stack table
-          (stack-table
-            (list (list '*unassigned*
-                        (make-stack)))))
+          (stack-table '()))
       ;...
       (define (lookup-stack name)
         (let ((val
