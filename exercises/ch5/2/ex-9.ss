@@ -1,6 +1,6 @@
 ; Exercise 5.9
+; Don't allow operations on labels
 
-;; We just need to filter out 
 (define (make-operation-exp
           exp machine labels operations)
   (let ((op (lookup-prim

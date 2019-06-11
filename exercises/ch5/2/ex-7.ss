@@ -1,4 +1,5 @@
 ; Exercise 5.7
+; Create an exponentiation machine
 
 (define expt-machine
   (make-machine

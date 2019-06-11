@@ -9,5 +9,6 @@
 (load "machine-assembler.ss")
 (load "machine-execution-procs.ss")
 
-(display (load "gcd-machine.ss")) ; 2
-(display (load "ex-7.ss")) ; 100
+;(display (load "gcd-machine.ss")) ; 2
+;(display (load "ex-7.ss")) ; 100
+(display (load "fib-machine.ss"))

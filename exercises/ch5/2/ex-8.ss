@@ -1,8 +1,10 @@
 ; Exercise 5.8
+; Don't allow more than one label of the same name
 
 ; 1. 3 --> we use assoc to build the label table and it will default to the
 ; first table entry
 
+; 2.
 (define (extract-labels text receive)
   (if (null? text)
       (receive '() '())
