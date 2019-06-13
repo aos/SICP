@@ -1,7 +1,8 @@
 ; Exercise 5.12
 
 ; 1. List of all instructions with dupes removed,
-; sorted by instruction type
+; sorted by instruction type. This procedure is used
+; by all other parts of the exercise
 
 (define (make-instruction-table insts)
   (let ((inst-table '()))
@@ -39,7 +40,7 @@
 (define (assemble register-names controller-text machine)
   (extract-labels controller-text
                   (lambda (insts labels)
-                    ;; Create the instruction table (1 2 3)
+                    ;; Create the instruction table (1 2 3 4)
                     (let ((inst-table (make-instruction-table insts)))
                       (let ((entry-point-regs (create-list-entry-regs
                                                 inst-table))
@@ -51,11 +52,11 @@
                         (update-insts! insts
                                        labels
                                        machine)
-                        (cons insts
-                              (cons inst-table
-                                    (cons entry-point-regs
-                                          (cons save-restore-regs
-                                                assign-source-regs)))))))))
+                        (list insts
+                              inst-table ; (1)
+                              entry-point-regs ; (2)
+                              save-restore-regs ; (3)
+                              assign-source-regs)))))) ; (4)
 
 ;; 2. List of registers that hold entry points
 ; Parse inst-table for 'goto', grab all 'reg'
@@ -156,11 +157,11 @@
               ((eq? message 'install-insts-and-lists) ; (1, 2, 3, 4)
                (lambda (seq-and-lists)
                  (set! the-instruction-sequence
-                   (car seq-and-lists))
-                 (set! inst-table (cadr seq-and-lists))
-                 (set! entry-point-regs (caddr seq-and-lists))
-                 (set! save-restore-regs (cadddr seq-and-lists))
-                 (set! assign-source-regs (cddddr seq-and-lists))))
+                   (list-ref seq-and-lists 0))
+                 (set! inst-table (list-ref seq-and-lists 1))
+                 (set! entry-point-regs (list-ref seq-and-lists 2))
+                 (set! save-restore-regs (list-ref seq-and-lists 3))
+                 (set! assign-source-regs (list-ref seq-and-lists 4))))
               ((eq? message
                     'allocate-register)
                allocate-register)
@@ -196,7 +197,7 @@
 ;    ((assign val (const 1)))
 ;    ((goto (reg continue)))))
 
-;; Turn into this table
+;; Turn into this inst-table
 ;'((restore
 ;    (continue))
 ;  (goto
