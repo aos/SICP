@@ -78,10 +78,10 @@
               "Multiply defined register: "
               name)
             (set! register-table
-                  (cons
-                    (list name
-                          (make-register name))
-                    register-table)))
+              (cons
+                (list name
+                      (make-register name))
+                register-table)))
         'register-allocated)
       (define (lookup-register name)
         (let ((val
@@ -103,11 +103,10 @@
                  pc
                  the-instruction-sequence)
                (execute))
-              ((eq? message
-                    'install-instruction-sequence)
+              ((eq? message 'install-instruction-sequence)
                (lambda (seq)
                  (set! the-instruction-sequence
-                        seq)))
+                   seq)))
               ((eq? message
                     'allocate-register)
                allocate-register)
@@ -116,7 +115,7 @@
               ((eq? message 'install-operations)
                (lambda (ops)
                  (set! the-ops
-                       (append the-ops ops))))
+                   (append the-ops ops))))
               ((eq? message 'stack) stack)
               ((eq? message 'operations) the-ops)
               ((eq? message 'inst-sequence-look) the-instruction-sequence)
@@ -142,3 +141,8 @@
 
 (define (get-register machine reg-name)
   ((machine 'get-register) reg-name))
+
+(define (tagged-list? exp tag)
+  (if (pair? exp)
+      (eq? (car exp) tag)
+      #f))
