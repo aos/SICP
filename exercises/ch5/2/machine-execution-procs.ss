@@ -154,7 +154,7 @@
                   operations)))
           (lambda ()
             (action-proc)
-            (advance-pc)))
+            (advance-pc pc)))
         (error "Bad PERFORM instruction: ASSEMBLE"
                inst))))
 

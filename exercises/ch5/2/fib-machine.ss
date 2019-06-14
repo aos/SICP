@@ -6,6 +6,7 @@
     (list (list '- -)
           (list '< <)
           (list '+ +))
+
     '(controller
         (assign continue (label fib-done))
 
@@ -47,9 +48,3 @@
         (goto (reg continue))
 
       fib-done)))
-
-(set-register-contents! fib-machine 'n 10);
-
-(start fib-machine)
-
-(get-register-contents fib-machine 'val)

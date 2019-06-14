@@ -8,9 +8,10 @@
               (+ counter 1))))
   (iter 1 1))
 
-(controller
-  (assign product (const 1))
-  (assign counter (const 1))
+'(controller
+    (assign n (op read))
+    (assign product (const 1))
+    (assign counter (const 1))
 
   test-counter
     (test (op >) (reg counter) (reg n))
@@ -18,4 +19,5 @@
     (assign product (op *) (reg product) (reg counter))
     (assign counter (op +) (reg counter) (const 1))
     (goto (label test-counter))
+
   fact-done)
