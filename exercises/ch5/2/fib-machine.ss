@@ -5,9 +5,12 @@
     '(continue n val)
     (list (list '- -)
           (list '< <)
-          (list '+ +))
+          (list '+ +)
+          (list 'read read)
+          (list 'print write-line))
 
     '(controller
+        (assign n (op read))
         (assign continue (label fib-done))
 
       fib-loop
@@ -31,8 +34,7 @@
         (goto (label fib-loop))
 
       afterfib-n-2 ; upon return, val contains Fib(n − 2)
-        (assign n
-                (reg val)) ; n now contains Fib(n − 2)
+        (assign n (reg val)) ; n now contains Fib(n − 2)
         (restore val)      ; val now contains Fib(n − 1)
         (restore continue)
         (assign val        ; Fib(n − 1) + Fib(n − 2)
@@ -43,8 +45,8 @@
           (reg continue))   ; answer is in val
 
       immediate-answer
-        (assign val
-                (reg n))   ; base case: Fib(n) = n
+        (assign val (reg n))   ; base case: Fib(n) = n
         (goto (reg continue))
 
-      fib-done)))
+      fib-done
+        (perform (op print) (reg val)))))

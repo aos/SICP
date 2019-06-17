@@ -87,7 +87,9 @@
   (let ((pc (make-register 'pc))
         (flag (make-register 'flag)) ; Used to control branching
         (stack (make-stack))
-        (the-instruction-sequence '()))
+        (the-instruction-sequence '())
+        (inst-execute-count 0)
+        (debug #f))
     (let ((the-ops
             (list (list 'initialize-stack
                         (lambda ()
@@ -120,9 +122,22 @@
           (if (null? insts)
               'done
               (begin
+                (if debug
+                    (begin
+                      (display (list 'executing-instruction
+                                     (caar insts)))
+                      (newline)))
                 ((instruction-execution-proc
                    (car insts)))
+                (set! inst-execute-count
+                      (+ 1 inst-execute-count))
                 (execute)))))
+      (define (print-and-reset-inst-count)
+        (display (list 'instruction-count
+                       '=
+                       inst-execute-count))
+        (newline)
+        (set! inst-execute-count 0))
       (define (dispatch message)
         (cond ((eq? message 'start)
                (set-contents!
@@ -144,6 +159,14 @@
                    (append the-ops ops))))
               ((eq? message 'stack) stack)
               ((eq? message 'operations) the-ops)
+              ((eq? message 'print-and-reset-inst-count)
+               (print-and-reset-inst-count))
+              ((eq? message 'trace-on)
+               (set! debug #t)
+               '*tracing-on*)
+              ((eq? message 'trace-off)
+               (set! debug #f)
+               '*tracing-off*)
               (else (error "Unknown request: MACHINE"
                            message))))
       dispatch)))
