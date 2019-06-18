@@ -14,7 +14,7 @@
   ((assign val (const 1)))
   ((goto (reg continue))))
 
-; Labels:
+; Labels (association list):
 '((controller
     ((assign continue (label expt-done)))
     ((test (op =) (reg n) (const 0)))

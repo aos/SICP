@@ -6,7 +6,7 @@
 
 ;(display (load "gcd-machine.ss")) ; 2
 ;(display (load "ex-7.ss")) ; 100
-;(load "ex-13.ss")
+(load "ex-17.ss")
 
 (load "fib-machine.ss")
 ; (load "../1/fact-machine.ss")

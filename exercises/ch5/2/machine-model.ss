@@ -124,8 +124,8 @@
               (begin
                 (if debug
                     (begin
-                      (display (list 'executing-instruction
-                                     (caar insts)))
+                      (display (list "executing instruction:"
+                                     (instruction-text (car insts))))
                       (newline)))
                 ((instruction-execution-proc
                    (car insts)))
