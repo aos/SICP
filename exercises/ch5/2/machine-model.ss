@@ -89,7 +89,10 @@
         (stack (make-stack))
         (the-instruction-sequence '())
         (inst-execute-count 0)
-        (debug #f))
+        (trace #f)
+        (break-on #f)
+        (curr-label '*unassigned*)
+        (bps (list '*breakpoints*)))
     (let ((the-ops
             (list (list 'initialize-stack
                         (lambda ()
@@ -122,16 +125,37 @@
           (if (null? insts)
               'done
               (begin
-                (if debug
+                (if break-on
                     (begin
-                      (display (list "executing instruction:"
-                                     (instruction-text (car insts))))
-                      (newline)))
-                ((instruction-execution-proc
-                   (car insts)))
-                (set! inst-execute-count
-                      (+ 1 inst-execute-count))
-                (execute)))))
+                      (set! break-on #f)
+                      (write-line (list "Pausing execution -- label:"
+                                        curr-label
+                                        "Offset:"
+                                        inst-execute-count)))
+                    (begin
+                      (if (not (null? (instruction-label (car insts))))
+                          (begin
+                            (set! curr-label (instruction-label (car insts)))
+                            (set! inst-execute-count 0)) ; Reset count
+                          (set! inst-execute-count (+ 1 inst-execute-count)))
+                      (if (breakpoint-set? curr-label inst-execute-count)
+                          (set! break-on #t))
+                      (if trace
+                          (write-line (list "executing instruction:"
+                                            (instruction-text (car insts)))))
+                      ((instruction-execution-proc (car insts)))
+                      (execute)))))))
+      (define (breakpoint-set? label count)
+        (let ((existing-bp (lookup-table label count bps)))
+          (and existing-bp
+               (eq? existing-bp 'on))))
+      (define (set-bp! label n)
+        (insert-table! label n 'on bps))
+      (define (unset-bp! label n)
+        (insert-table! label n 'off bps))
+      (define (unset-all-bps!)
+        (set! bps (list '*breakpoints*))
+        'done)
       (define (print-and-reset-inst-count)
         (display (list 'instruction-count
                        '=
@@ -161,12 +185,14 @@
               ((eq? message 'operations) the-ops)
               ((eq? message 'print-and-reset-inst-count)
                (print-and-reset-inst-count))
-              ((eq? message 'trace-on)
-               (set! debug #t)
-               '*tracing-on*)
-              ((eq? message 'trace-off)
-               (set! debug #f)
-               '*tracing-off*)
+              ((eq? message 'trace-on) (set! trace #t)
+                                       '*tracing-on*)
+              ((eq? message 'trace-off) (set! trace #f)
+                                        '*tracing-off*)
+              ((eq? message 'insert-breakpoint) set-bp!)
+              ((eq? message 'cancel-breakpoint) unset-bp!)
+              ((eq? message 'cancel-all-bps) (unset-all-bps!))
+              ((eq? message 'proceed) (execute))
               (else (error "Unknown request: MACHINE"
                            message))))
       dispatch)))

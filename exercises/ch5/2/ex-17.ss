@@ -42,12 +42,12 @@
     insts))
 
 ;; Change machine model -- (execute)
-(if debug
-    (begin
-      (if (not (null? (instruction-label (car insts))))
-          (write-line (list "Current label:"
-                            (instruction-label (car insts))))
-          (newline))
-      (display (list "executing instruction:"
-                     (instruction-text (car insts))))
-      (newline)))
+;(if debug
+;    (begin
+;      (if (not (null? (instruction-label (car insts))))
+;          (write-line (list "Current label:"
+;                            (instruction-label (car insts))))
+;          (newline))
+;      (display (list "executing instruction:"
+;                     (instruction-text (car insts))))
+;      (newline)))
