@@ -30,7 +30,7 @@
 
 (define x '())
 (define (put-cont-in-x cont) (set! x cont))
-(define print-line (lambda (x) (display x) (newline))))
+(define print-line (lambda (x) (display x) (newline)))
 
 (print-line (call-with-current-continuation
               put-cont-in-x))
