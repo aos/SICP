@@ -1,13 +1,8 @@
 ; The Machine Model
 
-(define (make-machine register-names
-                      ops
+(define (make-machine ops
                       controller-text)
   (let ((machine (make-new-machine)))
-    (for-each (lambda (register-name)
-                ((machine 'allocate-register)
-                 register-name))
-              register-names)
     ((machine 'install-operations) ops)
     ((machine 'install-instruction-sequence)
      (assemble controller-text machine))
@@ -90,7 +85,7 @@
         (the-instruction-sequence '())
         (inst-execute-count 0)
         (trace #f)
-        (break-on #f)
+        (bp-set #f)
         (curr-label '*unassigned*)
         (bps (list '*breakpoints*)))
     (let ((the-ops
@@ -119,15 +114,17 @@
                 (assoc name register-table)))
           (if val
               (cadr val)
-              (error "Unknown register:" name))))
+              (begin
+                (allocate-register name)
+                (lookup-register name)))))
       (define (execute)
         (let ((insts (get-contents pc)))
           (if (null? insts)
               'done
               (begin
-                (if break-on
+                (if bp-set
                     (begin
-                      (set! break-on #f)
+                      (set! bp-set #f)
                       (write-line (list "Pausing execution -- label:"
                                         curr-label
                                         "Offset:"
@@ -139,7 +136,7 @@
                             (set! inst-execute-count 0)) ; Reset count
                           (set! inst-execute-count (+ 1 inst-execute-count)))
                       (if (breakpoint-set? curr-label inst-execute-count)
-                          (set! break-on #t))
+                          (set! bp-set #t))
                       (if trace
                           (write-line (list "executing instruction:"
                                             (instruction-text (car insts)))))
@@ -155,6 +152,7 @@
         (insert-table! label n 'off bps))
       (define (unset-all-bps!)
         (set! bps (list '*breakpoints*))
+        (set! bp-set #f)
         'done)
       (define (print-and-reset-inst-count)
         (display (list 'instruction-count

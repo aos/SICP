@@ -2,7 +2,6 @@
 
 (define gcd-machine
   (make-machine
-    '(a b t) ; register names
     (list
       (list 'rem remainder)
       (list '= =)

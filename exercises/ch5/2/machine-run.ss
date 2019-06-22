@@ -6,8 +6,9 @@
 
 ;(display (load "gcd-machine.ss")) ; 2
 ;(display (load "ex-7.ss")) ; 100
-(load "ex-17.ss")
-(load "ex-19.ss")
+(load "ex-17.ss") ; storing labels
+(load "ex-19.ss") ; breakpoints
 
-(load "gcd-machine.ss")
+;(load "fib-machine.ss")
+(load "../3/ex-21.ss")
 ;(load "../1/fact-machine.ss")

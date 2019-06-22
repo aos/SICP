@@ -2,12 +2,11 @@
 
 (define fib-machine
   (make-machine
-    '(continue n val)
-    (list (list '- -)
-          (list '< <)
-          (list '+ +)
-          (list 'read read)
-          (list 'print write-line))
+    `((- ,-)
+      (< ,<)
+      (+ ,+)
+      (read ,read)
+      (print ,write-line))
 
     '(controller
         (assign n (op read))
