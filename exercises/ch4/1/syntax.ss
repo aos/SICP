@@ -116,7 +116,7 @@
             (if (null? rest)
                 (sequence->exp
                   (cond-actions first))
-                (error "ELSE clauses isn't
+                (error "ELSE clause isn't
                         last: COND->IF"
                         clauses))
             (make-if (cond-predicate first)

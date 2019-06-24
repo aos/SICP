@@ -19,6 +19,8 @@
         (branch (label ev-definition))
         (test (op if?) (reg exp))
         (branch (label ev-if))
+        (test (op cond?) (reg exp))
+        (branch (label ev-cond))
         (test (op lambda?) (reg exp))
         (branch (label ev-lambda))
         (test (op begin?) (reg exp))
@@ -195,6 +197,10 @@
       ev-if-consequent
         (assign exp (op if-consequent) (reg exp))
         (goto (label eval-dispatch))
+
+      ev-cond
+        (assign exp (op cond->if) (reg exp))
+        (goto (label ev-if))
       
       ; assignments
       ev-assignment
