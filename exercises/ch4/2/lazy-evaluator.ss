@@ -78,34 +78,10 @@
             (list-of-delayed-args
               (rest-operands exps)
               env))))
-;;
+
+;; delayed
 (define (eval-if exp env)
   (if (true? (actual-value (if-predicate exp)
                            env))
       (eval (if-consequent exp) env)
       (eval (if-alternative exp) env)))
-
-;;
-(define (eval-sequence exps env)
-  (cond ((last-exp? exps)
-         (eval (first-exp exps) env))
-        (else
-          (eval (first-exp exps) env)
-          (eval-sequence (rest-exps exps)
-                         env))))
-
-;;
-(define (eval-assignment exp env)
-  (set-variable-value!
-    (assignment-variable exp)
-    (eval (assignment-value exp) env)
-    env)
-  'ok)
-
-;;
-(define (eval-definition exp env)
-  (define-variable!
-    (definition-variable exp)
-    (eval (definition-value exp) env)
-    env)
-  'ok)
