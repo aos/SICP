@@ -23,5 +23,6 @@
 (define (get-global-environment)
   the-global-environment)
 
+(load "ex-28.ss"); no-more-exps?
 (load "explicit-operations.ss")
 (load "explicit-eval.ss")

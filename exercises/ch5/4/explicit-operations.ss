@@ -43,6 +43,7 @@
     (first-exp ,first-exp)
     (last-exp? ,last-exp?)
     (rest-exps ,rest-exps)
+    (no-more-exps? ,no-more-exps?)
     ; if
     (if-predicate ,if-predicate)
     (if-consequent ,if-consequent)

@@ -11,6 +11,7 @@
         (list 'square square)
         (list '= =)
         (list '> >)
+        (list '< <)
         (list 'eq? eq?)
         (list 'even? even?)
         (list 'not not)
