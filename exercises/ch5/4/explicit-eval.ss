@@ -57,7 +57,7 @@
                 (reg env))
         (goto (reg continue))
       
-      env-application
+      ev-application
         (save continue)
         (save env)
         (assign unev (op operands) (reg exp))
@@ -68,10 +68,10 @@
         (goto (label eval-dispatch))
         
       ev-appl-did-operator
-        (restore unev)          ; operands
+        (restore unev)            ; operands
         (restore env)
         (assign argl (op empty-arglist))
-        (assign proc (reg val))  ; operator
+        (assign proc (reg val))   ; operator
         (test (op no-operands?) (reg unev))
         (branch (label apply-dispatch))
         (save proc))
