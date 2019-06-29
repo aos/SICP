@@ -10,5 +10,5 @@
 (load "ex-19.ss") ; breakpoints
 
 ;(load "fib-machine.ss")
-(load "../3/ex-22.ss")
+;(load "../3/ex-22.ss")
 ;(load "../1/fact-machine.ss")

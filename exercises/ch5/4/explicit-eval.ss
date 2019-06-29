@@ -1,13 +1,27 @@
 ; Explicit Control Evaluator
 
-(define ece-machine
+(define eceval
   (make-machine
-    `((self-evaluating? ,self-evaluating?))
-    
-    '(controller
-       
+    ; Operations
+    eceval-operations
+
+    ;; Start with REPL
+    '(read-eval-print-loop
+        (perform (op initialize-stack))
+        (perform (op prompt-for-input)
+                 (const ";;; EC-Eval input:"))
+        (assign exp (op read))
+        (assign env (op get-global-environment))
+        (assign continue (label print-result))
+        (goto (label eval-dispatch))
+      print-result
+        (perform (op announce-output)
+                 (const ";;; EC-Eval value:"))
+        (perform (op user-print) (reg val))
+        (goto (label read-eval-print-loop))
+
       eval-dispatch
-        (test (op (self-evaluating?) (reg exp)))
+        (test (op self-evaluating?) (reg exp))
         (branch (label ev-self-eval))
         (test (op variable?) (reg exp))
         (branch (label ev-variable))
@@ -34,7 +48,7 @@
         (goto (reg continue))
       ev-variable
         (assign val
-                (op (lookup-variable-value))
+                (op lookup-variable-value)
                 (reg exp)
                 (reg env))
         (goto (reg continue))
@@ -62,7 +76,7 @@
         (save env)
         (assign unev (op operands) (reg exp))
         (save unev)
-        (assign exp (operator) (reg exp))
+        (assign exp (op operator) (reg exp))
         (assign
           continue (label ev-appl-did-operator))
         (goto (label eval-dispatch))
@@ -74,7 +88,7 @@
         (assign proc (reg val))   ; operator
         (test (op no-operands?) (reg unev))
         (branch (label apply-dispatch))
-        (save proc))
+        (save proc)
     
       ev-appl-operand-loop
         (save argl)
@@ -205,7 +219,7 @@
       ; assignments
       ev-assignment
         (assign unev
-                (op assigment-variable)
+                (op assignment-variable)
                 (reg exp))
         (save unev) ; save variable for later
         (assign exp
@@ -249,10 +263,19 @@
                  (reg val)
                  (reg env))
         (assign val (const ok))
-        (goto (reg continue))))
+        (goto (reg continue))
 
-; Arg helpers
-(define (empty-arglist) '())
-(define (adjoin-arg arg arglist)
-  (append arglist (list arg)))
-(define (last-operand? ops) (null? (cdr ops)))
+      ; Error handling
+      unknown-expression-type
+        (assign val
+                (const unknown-expression-type-error))
+        (goto (label signal-error))
+      unknown-procedure-type
+        ; clean up stack (from apply-dispatch)
+        (restore continue)
+        (assign val
+                (const unknown-procedure-type-error))
+        (goto (label signal-error))
+      signal-error
+        (perform (op user-print) (reg val))
+        (goto (label read-eval-print-loop)))))

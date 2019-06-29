@@ -50,7 +50,7 @@
       (set! s '())
       (set! number-pushes 0)
       (set! max-depth 0)
-      (set current-depth 0)
+      (set! current-depth 0)
       'done)
     (define (print-statistics)
       (newline)
