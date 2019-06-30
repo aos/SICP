@@ -58,5 +58,11 @@
     ; definition
     (definition-variable ,definition-variable)
     (definition-value ,definition-value)
-    (define-variable! ,define-variable!)))
+    (define-variable! ,define-variable!)
+    ; unbound variable
+    (unbound-var? ,unbound-var?)
+    (var-value ,var-value)
+    (var-bind-type ,var-bind-type)
+    ; safe-car-cdr
+    (primitive-error? ,primitive-error?)))
 

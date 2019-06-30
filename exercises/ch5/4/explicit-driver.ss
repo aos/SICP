@@ -6,6 +6,7 @@
 (define apply-in-underlying-scheme apply)
 
 (load "../../ch4/1/global.ss")
+(load "ex-30.ss") ; make unbound variable
 
 ;; Arg helpers
 (define (empty-arglist) '())

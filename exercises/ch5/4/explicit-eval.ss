@@ -5,7 +5,7 @@
     ; Operations
     eceval-operations
 
-    ;; Start with REPL
+    ; REPL start
     '(read-eval-print-loop
         (perform (op initialize-stack))
         (perform (op prompt-for-input)
@@ -52,6 +52,11 @@
                 (op lookup-variable-value)
                 (reg exp)
                 (reg env))
+        (test (op unbound-var?) (reg val))
+        (branch (label unbound-variable-error))
+        (assign val
+                (op var-value)
+                (reg val))
         (goto (reg continue))
       ev-quoted
         (assign val
@@ -142,6 +147,8 @@
         (assign val (op apply-primitive-procedure)
                     (reg proc)
                     (reg argl))
+        (test (op primitive-error?) (reg val))
+        (branch (label primitive-error))
         (restore continue)
         (goto (reg continue))
         
@@ -276,6 +283,14 @@
         (restore continue)
         (assign val
                 (const unknown-procedure-type-error))
+        (goto (label signal-error))
+      unbound-variable-error
+        (restore continue)
+        (assign val
+                (const unbound-variable))
+        (goto (label signal-error))
+      primitive-error
+        (restore continue)
         (goto (label signal-error))
       signal-error
         (perform (op user-print) (reg val))
