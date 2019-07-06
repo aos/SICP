@@ -11,8 +11,11 @@
 (write-line
   (compile
     '(define (factorial n)
-       (if (= n 1)
-           1
-           (* (factorial (- n 1)) n)))
+       (define (iter product counter)
+         (if (> counter n)
+             product
+             (iter (* counter product)
+                   (+ counter 1))))
+       (iter 1 1))
     'val
     'next))

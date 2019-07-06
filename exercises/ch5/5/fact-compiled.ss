@@ -73,8 +73,9 @@ after-call6
   (branch (label primitive-branch11))
 ; apply factorial
 compiled-branch10
+; We save the continue here so that we can restore into it
   (assign continue (label after-call9))
-; entry2
+; entry2 -> we recurse into (factorial (- n 1)) here
   (assign val (op compiled-procedure-entry) (reg proc))
   (goto (reg val))
 primitive-branch11
