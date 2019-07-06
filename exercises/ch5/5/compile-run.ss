@@ -8,10 +8,11 @@
 (load "compile-linkage.ss")
 (load "compile-combining-inst.ss")
 
-(compile
-  '(define (factorial n)
-     (if (= n 1)
-         1
-         (* n (factorial (- n 1)))))
-  'val
-  'next)
+(write-line
+  (compile
+    '(define (factorial n)
+       (if (= n 1)
+           1
+           (* (factorial (- n 1)) n)))
+    'val
+    'next))
