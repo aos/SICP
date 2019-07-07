@@ -19,6 +19,10 @@
     (make-instruction-sequence
       (list-union
         (registers-needed seq1)
+        ; The reason we grab the difference here is that
+        ; if a previous sequence modifies a register, then
+        ; it has already been initialized and we don't need
+        ; to initialize it again
         (list-difference
           (registers-needed seq2)
           (registers-modified seq1)))
@@ -59,9 +63,10 @@
       (append-instruction-sequences seq1 seq2)
       (let ((first-reg (car regs)))
         (if (and
-              (needs-register? seq2 first-reg)
+              (needs-register? seq2
+                               first-reg)
               (modifies-register? seq1
-                                 first-reg))
+                                  first-reg))
             (preserving
               (cdr regs)
               (make-instruction-sequence

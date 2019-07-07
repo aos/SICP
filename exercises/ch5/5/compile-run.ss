@@ -8,14 +8,10 @@
 (load "compile-linkage.ss")
 (load "compile-combining-inst.ss")
 
+(load "ex-37.ss") ; Bad preserving
+
 (write-line
   (compile
-    '(define (factorial n)
-       (define (iter product counter)
-         (if (> counter n)
-             product
-             (iter (* counter product)
-                   (+ counter 1))))
-       (iter 1 1))
+    '(define (f x) (+ x (g (+ x 2))))
     'val
     'next))
