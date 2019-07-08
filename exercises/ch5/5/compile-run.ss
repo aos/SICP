@@ -8,7 +8,7 @@
 (load "compile-linkage.ss")
 (load "compile-combining-inst.ss")
 
-(load "ex-37.ss") ; Bad preserving
+(load "ex-38.ss") ; Open codes
 
 (write-line
   (compile
