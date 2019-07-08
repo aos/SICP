@@ -16,11 +16,10 @@
           (compile (cadr operands) 'arg2 'next)))
   (end-with-linkage
     linkage
-    (preserving
-      '(env)
+    (append-instruction-sequences
       first-operand-code
       (preserving
-        '(arg2)
+        '(arg1)
         second-operand-code
         (make-instruction-sequence
           '(arg1 arg2)
@@ -32,7 +31,7 @@
 
 
 ; 2.
-(define (compile-open-codes exp target linkage)
+(define (compile-open-code exp target linkage)
   (let ((op (operator exp))
         (args (operands exp)))
     (if (or (eq? op '=)

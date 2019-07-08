@@ -12,6 +12,6 @@
 
 (write-line
   (compile
-    '(define (f x) (+ x (g (+ x 2))))
+    '(define (f x y) (+ x (- 1 y)))
     'val
     'next))
