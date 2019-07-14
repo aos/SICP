@@ -12,11 +12,14 @@
         '(env)
         (list target)
         (if (eq? var-addr 'not-found)
-            `((assign ,target
+            `((save env)
+              (assign env (op get-global-environment))
+              (assign ,target
                       (op lookup-variable-value)
                       (const ,exp)
                       ; Look for it straight in global env
-                      (op get-global-environment)))
+                      (reg env))
+              (restore env))
             `((assign ,target
                       (op lexical-address-lookup)
                       (const ,var-addr)
