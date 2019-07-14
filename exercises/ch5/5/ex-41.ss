@@ -4,9 +4,9 @@
 ; Given this compile-time environment:
 (define env '((y z) (a b c d e) (x y)))
 
-(find-variable 'c env) ; (1 . 2)
-(find-variable 'x env) ; (2 . 0)
-(find-variable 'w env) ; 'not-found
+;(find-variable 'c env) ; (1 . 2)
+;(find-variable 'x env) ; (2 . 0)
+;(find-variable 'w env) ; 'not-found
 
 ; A variation on lookup-variable-value
 (define (find-variable var compile-env)

@@ -65,9 +65,9 @@
         ((assignment? exp)
          (compile-assignment exp target linkage compile-env))
         ((definition? exp)
-         (compile-definition exp target linkage compile-env))
+         (compile-definition exp target linkage))
         ((if? exp)
-         (compile-if exp target linkage compile-env))
+         (compile-if exp target linkage))
         ((lambda? exp)
          (compile-lambda exp target linkage compile-env))
         ((begin? exp)
@@ -75,12 +75,35 @@
            (begin-actions exp) target linkage compile-env))
         ((cond? exp)
          (compile
-           (cond->if exp) target linkage compile-env))
-        ((open-code? exp)
-         (compile-open-code exp target linkage))
+           (cond->if exp) target linkage))
         ((application? exp)
          (compile-application
            exp target linkage compile-env))
         (else
           (error "Unknown expression type: COMPILE"
                  exp))))
+
+(define (compile-sequence seq target linkage compile-env)
+  (if (last-exp? seq)
+      (compile (first-exp seq) target linkage compile-env)
+      (preserving '(env continue)
+        (compile (first-exp seq) target 'next compile-env)
+        (compile-sequence (rest-exps seq)
+                          target linkage compile-env))))
+
+(define (compile-application
+          exp target linkage compile-env)
+  (let ((proc-code
+          (compile (operator exp) 'proc 'next compile-env))
+        (operand-codes
+          (map (lambda (operand)
+                 (compile operand 'val 'next compile-env))
+               (operands exp))))
+    (preserving
+      '(env continue)
+      proc-code
+      (preserving
+        '(proc continue)
+        (construct-arglist operand-codes)
+        (compile-procedure-call
+          target linkage)))))

@@ -4,23 +4,23 @@
 
 (define (compile-variable
           exp target linkage compile-env)
-  (let ((var-addr (find-variable exp)
-                   compile-env))
-        (end-with-linkage
-          linkage
-          (make-instruction-sequence
-            '(env)
-            (list target)
-            (if (eq? var-addr 'not-found)
-                `((assign ,target
-                          (op lookup-variable-value)
-                          (const ,exp)
-                          ; Look for it straight in global env
-                          (op get-global-environment)))
-                `((assign ,target
-                          (op lexical-address-lookup)
-                          (const ,var-addr)
-                          (reg env))))))))
+  (let ((var-addr (find-variable exp
+                                 compile-env)))
+    (end-with-linkage
+      linkage
+      (make-instruction-sequence
+        '(env)
+        (list target)
+        (if (eq? var-addr 'not-found)
+            `((assign ,target
+                      (op lookup-variable-value)
+                      (const ,exp)
+                      ; Look for it straight in global env
+                      (op get-global-environment)))
+            `((assign ,target
+                      (op lexical-address-lookup)
+                      (const ,var-addr)
+                      (reg env))))))))
 
 (define (compile-assignment
           exp target linkage compile-env)
@@ -29,8 +29,8 @@
            (compile (assignment-value exp)
                     'val
                     'next))
-         (var-addr (find-variable var)
-                   compile-env))
+         (var-addr (find-variable var
+                                  compile-env)))
     (end-with-linkage
       linkage
       (preserving

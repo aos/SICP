@@ -78,8 +78,8 @@
   (let ((var (definition-variable exp))
         (get-value-code
           (compile (definition-value exp)
-                     'val
-                     'next)))
+                   'val
+                   'next)))
     (end-with-linkage
       linkage
       (preserving
