@@ -22,8 +22,6 @@
         ((cond? exp)
          (compile
            (cond->if exp) target linkage))
-        ((open-code? exp)
-         (compile-open-code exp target linkage))
         ((application? exp)
          (compile-application
            exp target linkage))

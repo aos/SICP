@@ -16,13 +16,9 @@
 
 (write-line
   (compile
-    '(((lambda (x y)
-         (lambda (a b c d e)
-           ((lambda (y z) (* x y z))
-            (* a b x)
-            (+ c d x))))
-       3 4)
-      1 2 3 4 5)
+    '(define (factorial n)
+     (if (= n 1)
+         1
+         (* (factorial (- n 1)) n)))
     'val
-    'next
-    '()))
+    'next)))
