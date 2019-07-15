@@ -6,28 +6,28 @@
   (and (pair? exp)
        (memq (operator exp) open-codes)))
 
-(define open-codes '(= * - +))
+(define open-codes '(= * / - +))
 
 ; 1.
-(define (spread-arguments op operands target linkage)
+(define (make-open-code-insts op operands target linkage)
   (let ((first-operand-code
           (compile (car operands) 'arg1 'next))
         (second-operand-code
           (compile (cadr operands) 'arg2 'next)))
-  (end-with-linkage
-    linkage
-    (append-instruction-sequences
-      first-operand-code
-      (preserving
-        '(arg1)
-        second-operand-code
-        (make-instruction-sequence
-          '(arg1 arg2)
-          (list target)
-          `((assign ,target
-                    (op ,op)
-                    (reg arg1)
-                    (reg arg2)))))))))
+    (end-with-linkage
+      linkage
+      (append-instruction-sequences
+        first-operand-code
+        (preserving
+          '(arg1)
+          second-operand-code
+          (make-instruction-sequence
+            '(arg1 arg2)
+            (list target)
+            `((assign ,target
+                      (op ,op)
+                      (reg arg1)
+                      (reg arg2)))))))))
 
 
 ; 2.
@@ -36,15 +36,15 @@
         (args (operands exp)))
     (if (or (eq? op '=)
             (eq? op '-))
-        (spread-arguments op
-                          args
-                          target
-                          linkage)
-        (spread-arguments op
-                          (construct-operands op
-                                              args)
-                          target
-                          linkage))))
+        (make-open-code-insts op
+                              args
+                              target
+                              linkage)
+        (make-open-code-insts op
+                              (construct-operands op
+                                                  args)
+                              target
+                              linkage))))
 
 ; 3.
 ; (+ 1 2 3 4 5) -> ((+ (+ (+ 1 2) 3) 4) 5)
