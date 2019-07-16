@@ -17,8 +17,8 @@
 (write-line
   (compile
     '(define (factorial n)
-     (if (= n 1)
-         1
-         (* (factorial (- n 1)) n)))
+       (if (= n 1)
+           1
+           (* (factorial (- n 1)) n)))
     'val
     'next)))

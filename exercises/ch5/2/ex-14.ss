@@ -4,4 +4,4 @@
 ; md = (n - 1) * 2
 
 ; 2. For total-pushes
-; tp = (n - 1) * n
+; tp = (n - 1) * 2
