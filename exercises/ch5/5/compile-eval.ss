@@ -4,8 +4,9 @@
     eceval-operations
 
     '(start-branch-external 
-      ; branches if flag is set
-      (branch (label external-entry))
+        (assign compapp (label compound-apply))
+        ; branches if flag is set
+        (branch (label external-entry))
       ; REPL start
       read-eval-print-loop
         (perform (op initialize-stack))

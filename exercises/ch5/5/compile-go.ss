@@ -26,6 +26,7 @@
 (load "compile-combining-inst.ss")
 (load "compile-operations.ss")
 (load "compile-eval.ss")
+(load "ex-47.ss") ; call interpreted code by compiled code
 
 (define (user-print object)
   (cond ((compound-procedure? object)
