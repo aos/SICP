@@ -57,6 +57,8 @@
     (false? ,false?)
     ; cond
     (cond->if ,cond->if)
+    ; let
+    (let->combination ,let->combination)
     ; assignment
     (assignment-variable ,assignment-variable)
     (assignment-value ,assignment-value)

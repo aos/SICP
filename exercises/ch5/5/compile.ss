@@ -19,6 +19,8 @@
         ((begin? exp)
          (compile-sequence
            (begin-actions exp) target linkage))
+        ((let? exp)
+         (compile (let->combination exp) target linkage))
         ((cond? exp)
          (compile
            (cond->if exp) target linkage))

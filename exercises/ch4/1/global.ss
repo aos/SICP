@@ -18,7 +18,9 @@
         (list 'remainder remainder)
         (list 'list list)
         (list 'newline newline)
-        (list 'display display)))
+        (list 'display display)
+        (list 'apply apply)
+        (list 'map map)))
 
 (define (primitive-procedure-names)
   (map car primitive-procedures))

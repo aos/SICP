@@ -2,6 +2,7 @@
 
 (load "../../ch4/1/syntax.ss")
 (load "../../ch4/1/ds.ss")
+(load "../../ch4/1/ex-6.ss")
 
 (define apply-in-underlying-scheme apply)
 
