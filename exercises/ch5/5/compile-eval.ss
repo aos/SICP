@@ -48,6 +48,8 @@
         (branch (label ev-lambda))
         (test (op begin?) (reg exp))
         (branch (label ev-begin))
+        (test (op compile-and-run?) (reg exp))
+        (branch (label ev-compile-and-run))
         (test (op application?) (reg exp))
         (branch (label ev-application))
         (goto (label unknown-expression-type))
@@ -79,6 +81,12 @@
                 (reg exp)
                 (reg env))
         (goto (reg continue))
+
+      ev-compile-and-run
+        ;; we compile here
+        (assign val (op compile-and-run-exp) (reg exp))
+        (assign val (op compile-exp) (reg val))
+        (goto (label external-entry))
       
       ev-application
         (save continue)

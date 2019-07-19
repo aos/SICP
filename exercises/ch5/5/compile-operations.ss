@@ -17,6 +17,7 @@
     (cond? ,cond?)
     (lambda? ,lambda?)
     (begin? ,begin?)
+    (compile-and-run? ,compile-and-run?)
     (application? ,application?)
     ; application
     (lookup-variable-value ,lookup-variable-value)
@@ -63,4 +64,7 @@
     ; definition
     (definition-variable ,definition-variable)
     (definition-value ,definition-value)
-    (define-variable! ,define-variable!)))
+    (define-variable! ,define-variable!)
+    ; compilation
+    (compile-exp ,compile-exp)
+    (compile-and-run-exp ,compile-and-run-exp)))

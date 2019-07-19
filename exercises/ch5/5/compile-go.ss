@@ -21,12 +21,13 @@
 (define (get-global-environment)
   the-global-environment)
 
+(load "ex-48.ss") ; compile inside evaluator
 (load "compile.ss")
 (load "compile-linkage.ss")
 (load "compile-combining-inst.ss")
 (load "compile-operations.ss")
 (load "compile-eval.ss")
-(load "ex-47.ss") ; call interpreted code by compiled code
+; (load "ex-47.ss") ; call interpreted code by compiled code
 
 (define (user-print object)
   (cond ((compound-procedure? object)
@@ -53,3 +54,9 @@
     (set-register-contents!
       eceval 'flag #t)
     (start eceval)))
+
+(define (start-eceval)
+  (set! the-global-environment
+    (setup-environment))
+  (set-register-contents! eceval 'flag #f)
+  (start eceval))
