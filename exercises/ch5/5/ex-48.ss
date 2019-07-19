@@ -10,7 +10,7 @@
   (tagged-list? exp 'compile-and-run))
 
 (define (compile-and-run-exp exp)
-  (display exp) (cadadr exp))
+  (cadadr exp))
 
 ;; add this to evaluator
 
